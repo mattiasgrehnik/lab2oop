@@ -34,37 +34,43 @@ public class MenuBar extends JMenuBar {
 		add(fileMenu);
 
 		JMenuItem undo = new JMenuItem("Undo");
+		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 		fileMenu.add(undo);
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				System.out.println("UNDO");
 			}
 		});
 		JMenuItem redo = new JMenuItem("Redo");
 		fileMenu.add(redo);
+		redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 		redo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				System.out.println("REDO");
 			}
 		});
+		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
 	private void initializeThicknessMenu() {
 		JMenu fileMenu = new JMenu("Thickness");
 		add(fileMenu);
+		ButtonGroup group = new ButtonGroup();
 
-		JMenuItem one = new JMenuItem("1px");
+		JRadioButtonMenuItem one = new JRadioButtonMenuItem("1px");
 		fileMenu.add(one);
+		group.add(one);
 		one.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO Draw shape
 			}
 		});
-		JMenuItem two = new JMenuItem("2px");
+		JRadioButtonMenuItem two = new JRadioButtonMenuItem("2px");
 		fileMenu.add(two);
+		group.add(two);
 		two.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -72,8 +78,9 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		
-		JMenuItem three = new JMenuItem("3px");
+		JRadioButtonMenuItem three = new JRadioButtonMenuItem("3px");
 		fileMenu.add(three);
+		group.add(three);
 		three.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -81,22 +88,20 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		
-		JMenuItem four = new JMenuItem("4px");
+		JRadioButtonMenuItem four = new JRadioButtonMenuItem("4px");
 		fileMenu.add(four);
+		group.add(four);
 		four.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO Draw shape
 			}
 		});
-		
-		
+		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
-
-
 	private void initializeFillButton() {
-		JMenuItem fill = new JMenuItem("Fill");
+		JMenuItem fill = new JMenu("Fill");
 		this.add(fill);
 		fill.addActionListener(new ActionListener() {
 			@Override
@@ -104,28 +109,27 @@ public class MenuBar extends JMenuBar {
 				fill.setEnabled(false);
 			}
 		});
-		
 
-		
 	}
-
-
 
 	private void initializeColorMenu() {
 		JMenu fileMenu = new JMenu("Color");
 		add(fileMenu);
-	
-		JMenuItem red = new JMenuItem("Red");
+		ButtonGroup group = new ButtonGroup();
+		
+		
+		JRadioButtonMenuItem red = new JRadioButtonMenuItem("Red");
 		fileMenu.add(red);
+		group.add(red);
 		red.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
 			}
 		});
 		
-		JMenuItem blue = new JMenuItem("Blue");
+		JRadioButtonMenuItem blue = new JRadioButtonMenuItem("Blue");
 		fileMenu.add(blue);
+		group.add(blue);
 		blue.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -133,8 +137,9 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		
-		JMenuItem green = new JMenuItem("Green");
+		JRadioButtonMenuItem green = new JRadioButtonMenuItem("Green");
 		fileMenu.add(green);
+		group.add(green);
 		green.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -142,8 +147,9 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		
-		JMenuItem yellow = new JMenuItem("Yellow");
+		JRadioButtonMenuItem yellow = new JRadioButtonMenuItem("Yellow");
 		fileMenu.add(yellow);
+		group.add(yellow);
 		yellow.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -151,37 +157,41 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		
-		JMenuItem black = new JMenuItem("Black");
+		JRadioButtonMenuItem black = new JRadioButtonMenuItem("Black");
 		fileMenu.add(black);
+		group.add(black);
 		black.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO Draw shape
 			}
 		});
-		
+		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
 	private void initializeSelectButton() {
-		select = new JMenuItem("Select");
-		this.add(select);
+		select = new JMenu("Select");
+		add(select);
 		select.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//TODO SELECT
 			}
 		});
+
 	}
 
-	private void initializeShapeMenu() {
+	private JMenu initializeShapeMenu() {
 		ShapeFactory sf = new ShapeFactory();
 		shapeNames = sf.getAvailableShapes();
 		
+		ButtonGroup group = new ButtonGroup();
 		JMenu fileMenu = new JMenu("Shape");
 		add(fileMenu);
 		for (int i = 0; i < shapeNames.length; i++) {
-			JMenuItem shape = new JMenuItem(shapeNames[i]);
+			JRadioButtonMenuItem shape = new JRadioButtonMenuItem(shapeNames[i]);
 			fileMenu.add(shape);
+			group.add(shape);
 			shape.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -189,9 +199,11 @@ public class MenuBar extends JMenuBar {
 				}
 			});
 		}
+		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
+		return fileMenu;
 	}
 	
-	private void initializeFileMenu() {
+	private JMenu initializeFileMenu() {
 		JMenu fileMenu = new JMenu("File");
 		add(fileMenu);
 
@@ -242,7 +254,7 @@ public class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		
+		return fileMenu;
 	}
 
 	public void start() {
