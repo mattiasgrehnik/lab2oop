@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -11,19 +9,195 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.DataStorage;
 import model.FileManagement;
+import model.Shape;
+import model.ShapeFactory;
 
 public class MenuBar extends JMenuBar {
 	private Frame frame;
-
+	private String[] shapeNames;
+	private JMenuItem select;
 	public MenuBar(Frame frame) {
 		this.frame = frame;
+		initializeFileMenu();
+		initializeCommandMenu();
+		initializeSelectButton();
+		initializeShapeMenu();
+		initializeColorMenu();
+		initializeFillButton();
+		initializeThicknessMenu();
+	}
 
+
+
+	private void initializeCommandMenu() {
+		JMenu fileMenu = new JMenu("Edit");
+		add(fileMenu);
+
+		JMenuItem undo = new JMenuItem("Undo");
+		fileMenu.add(undo);
+		undo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		JMenuItem redo = new JMenuItem("Redo");
+		fileMenu.add(redo);
+		redo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+	}
+
+	private void initializeThicknessMenu() {
+		JMenu fileMenu = new JMenu("Thickness");
+		add(fileMenu);
+
+		JMenuItem one = new JMenuItem("1px");
+		fileMenu.add(one);
+		one.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		JMenuItem two = new JMenuItem("2px");
+		fileMenu.add(two);
+		two.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem three = new JMenuItem("3px");
+		fileMenu.add(three);
+		three.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem four = new JMenuItem("4px");
+		fileMenu.add(four);
+		four.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		
+	}
+
+
+
+	private void initializeFillButton() {
+		JMenuItem fill = new JMenuItem("Fill");
+		this.add(fill);
+		fill.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fill.setEnabled(false);
+			}
+		});
+		
+
+		
+	}
+
+
+
+	private void initializeColorMenu() {
+		JMenu fileMenu = new JMenu("Color");
+		add(fileMenu);
+	
+		JMenuItem red = new JMenuItem("Red");
+		fileMenu.add(red);
+		red.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem blue = new JMenuItem("Blue");
+		fileMenu.add(blue);
+		blue.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem green = new JMenuItem("Green");
+		fileMenu.add(green);
+		green.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem yellow = new JMenuItem("Yellow");
+		fileMenu.add(yellow);
+		yellow.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+		JMenuItem black = new JMenuItem("Black");
+		fileMenu.add(black);
+		black.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO Draw shape
+			}
+		});
+		
+	}
+
+	private void initializeSelectButton() {
+		select = new JMenuItem("Select");
+		this.add(select);
+		select.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO SELECT
+			}
+		});
+	}
+
+	private void initializeShapeMenu() {
+		ShapeFactory sf = new ShapeFactory();
+		shapeNames = sf.getAvailableShapes();
+		
+		JMenu fileMenu = new JMenu("Shape");
+		add(fileMenu);
+		for (int i = 0; i < shapeNames.length; i++) {
+			JMenuItem shape = new JMenuItem(shapeNames[i]);
+			fileMenu.add(shape);
+			shape.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					//TODO: DRAW
+				}
+			});
+		}
+	}
+	
+	private void initializeFileMenu() {
 		JMenu fileMenu = new JMenu("File");
 		add(fileMenu);
 
-		JMenuItem newGame = new JMenuItem("New Painting");
-		fileMenu.add(newGame);
-		newGame.addActionListener(new ActionListener() {
+		JMenuItem newPic = new JMenuItem("New Painting");
+		fileMenu.add(newPic);
+		newPic.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				start();
@@ -68,6 +242,7 @@ public class MenuBar extends JMenuBar {
 				}
 			}
 		});
+		
 	}
 
 	public void start() {
