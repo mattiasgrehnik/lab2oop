@@ -1,5 +1,9 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -9,33 +13,46 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.DataStorage;
 import model.FileManagement;
-import model.Shape;
+import model.PaintModel;
 import model.ShapeFactory;
 
 public class MenuBar extends JMenuBar {
 	private Frame frame;
+	private ButtonGroup shapeGroup;
 	private String[] shapeNames;
-	private JMenuItem select;
+	private Color selectedColor;
+	private JComponent paintView;
+	private PaintModel model;
+
 	public MenuBar(Frame frame) {
 		this.frame = frame;
+		shapeGroup = new ButtonGroup();
+		selectedColor = Color.BLACK;
 		initializeFileMenu();
 		initializeCommandMenu();
-		initializeSelectButton();
 		initializeShapeMenu();
 		initializeColorMenu();
-		initializeFillButton();
 		initializeThicknessMenu();
+		start();
 	}
 
-
-
 	private void initializeCommandMenu() {
-		JMenu fileMenu = new JMenu("Edit");
-		add(fileMenu);
+		JMenu menu = new JMenu("Edit");
+		add(menu);
 
+		JRadioButtonMenuItem select = new JRadioButtonMenuItem("Select");
+		menu.add(select);
+		shapeGroup.add(select);
+		select.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				paintView.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		menu.addSeparator();
 		JMenuItem undo = new JMenuItem("Undo");
 		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		fileMenu.add(undo);
+		menu.add(undo);
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -43,7 +60,7 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 		JMenuItem redo = new JMenuItem("Redo");
-		fileMenu.add(redo);
+		menu.add(redo);
 		redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 		redo.addActionListener(new ActionListener() {
 			@Override
@@ -51,164 +68,151 @@ public class MenuBar extends JMenuBar {
 				System.out.println("REDO");
 			}
 		});
-		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
+		menu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
 	private void initializeThicknessMenu() {
-		JMenu fileMenu = new JMenu("Thickness");
-		add(fileMenu);
+		JMenu menu = new JMenu("Thickness");
+		add(menu);
 		ButtonGroup group = new ButtonGroup();
 
 		JRadioButtonMenuItem one = new JRadioButtonMenuItem("1px");
-		fileMenu.add(one);
+		one.setSelected(true);
+		menu.add(one);
 		group.add(one);
+
 		one.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				// TODO Draw shape
 			}
 		});
 		JRadioButtonMenuItem two = new JRadioButtonMenuItem("2px");
-		fileMenu.add(two);
+		menu.add(two);
 		group.add(two);
 		two.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				// TODO Draw shape
 			}
 		});
-		
+
 		JRadioButtonMenuItem three = new JRadioButtonMenuItem("3px");
-		fileMenu.add(three);
+		menu.add(three);
 		group.add(three);
 		three.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				// TODO Draw shape
 			}
 		});
-		
+
 		JRadioButtonMenuItem four = new JRadioButtonMenuItem("4px");
-		fileMenu.add(four);
+		menu.add(four);
 		group.add(four);
 		four.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				// TODO Draw shape
 			}
 		});
-		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
-	}
-
-	private void initializeFillButton() {
-		JMenuItem fill = new JMenu("Fill");
-		this.add(fill);
-		fill.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fill.setEnabled(false);
-			}
-		});
-
+		menu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
 	private void initializeColorMenu() {
-		JMenu fileMenu = new JMenu("Color");
-		add(fileMenu);
+		JMenu menu = new JMenu("Color");
+		add(menu);
 		ButtonGroup group = new ButtonGroup();
-		
-		
+
+		JRadioButtonMenuItem fill = new JRadioButtonMenuItem("Fill");
+		menu.add(fill);
+		fill.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		menu.addSeparator();
 		JRadioButtonMenuItem red = new JRadioButtonMenuItem("Red");
-		fileMenu.add(red);
+		menu.add(red);
 		group.add(red);
 		red.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				selectedColor = Color.RED;
 			}
 		});
-		
+
 		JRadioButtonMenuItem blue = new JRadioButtonMenuItem("Blue");
-		fileMenu.add(blue);
+		menu.add(blue);
 		group.add(blue);
 		blue.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				selectedColor = Color.BLUE;
 			}
 		});
-		
+
 		JRadioButtonMenuItem green = new JRadioButtonMenuItem("Green");
-		fileMenu.add(green);
+		menu.add(green);
 		group.add(green);
 		green.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				selectedColor = Color.GREEN;
 			}
 		});
-		
+
 		JRadioButtonMenuItem yellow = new JRadioButtonMenuItem("Yellow");
-		fileMenu.add(yellow);
+		menu.add(yellow);
 		group.add(yellow);
 		yellow.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				selectedColor = Color.YELLOW;
 			}
 		});
-		
+
 		JRadioButtonMenuItem black = new JRadioButtonMenuItem("Black");
-		fileMenu.add(black);
+		black.setSelected(true);
+		menu.add(black);
 		group.add(black);
 		black.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Draw shape
+				selectedColor = Color.BLACK;
 			}
 		});
-		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
-	}
-
-	private void initializeSelectButton() {
-		select = new JMenu("Select");
-		add(select);
-		select.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//TODO SELECT
-			}
-		});
-
+		menu.setHorizontalAlignment(SwingConstants.LEFT);
 	}
 
 	private JMenu initializeShapeMenu() {
 		ShapeFactory sf = new ShapeFactory();
 		shapeNames = sf.getAvailableShapes();
-		
-		ButtonGroup group = new ButtonGroup();
-		JMenu fileMenu = new JMenu("Shape");
-		add(fileMenu);
+
+		JMenu menu = new JMenu("Shape");
+		add(menu);
 		for (int i = 0; i < shapeNames.length; i++) {
 			JRadioButtonMenuItem shape = new JRadioButtonMenuItem(shapeNames[i]);
-			fileMenu.add(shape);
-			group.add(shape);
+			menu.add(shape);
+			shapeGroup.add(shape);
 			shape.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO: DRAW
+					paintView.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+					
 				}
 			});
 		}
-		fileMenu.setHorizontalAlignment(SwingConstants.LEFT);
-		return fileMenu;
+		menu.setHorizontalAlignment(SwingConstants.LEFT);
+		return menu;
 	}
-	
+
 	private JMenu initializeFileMenu() {
-		JMenu fileMenu = new JMenu("File");
-		add(fileMenu);
+		JMenu menu = new JMenu("File");
+		add(menu);
 
 		JMenuItem newPic = new JMenuItem("New Painting");
-		fileMenu.add(newPic);
+		menu.add(newPic);
 		newPic.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -217,7 +221,7 @@ public class MenuBar extends JMenuBar {
 		});
 
 		JMenuItem saveGame = new JMenuItem("Save Painting");
-		fileMenu.add(saveGame);
+		menu.add(saveGame);
 		saveGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -227,7 +231,7 @@ public class MenuBar extends JMenuBar {
 		});
 
 		JMenuItem loadGame = new JMenuItem("Load Painting");
-		fileMenu.add(loadGame);
+		menu.add(loadGame);
 		loadGame.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -237,7 +241,7 @@ public class MenuBar extends JMenuBar {
 		});
 
 		JMenuItem quitItem = new JMenuItem("Exit");
-		fileMenu.add(quitItem);
+		menu.add(quitItem);
 		quitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				Object[] options = { "Yes", "No", "Cancel" };
@@ -254,23 +258,19 @@ public class MenuBar extends JMenuBar {
 				}
 			}
 		});
-		return fileMenu;
+		return menu;
 	}
 
 	public void start() {
+		frame.getContentPane().removeAll();
+		model = new PaintModel();
 
-//		frame.getContentPane().removeAll();
-//		model = new PaintModel();
-//
-//		boardView = new BoardView(model);
-//		boardView.setPreferredSize(new Dimension(520, 540));
-//		frame.add(boardView, BorderLayout.EAST);
-//
-//		playerGUI = new PlayerGUI(othello);
-//		playerGUI.setPreferredSize(new Dimension(250, 540));
-//		frame.add(playerGUI, BorderLayout.WEST);
-//
-//		frame.setVisible(true);
+		paintView = new PaintView(model);
+		paintView.setPreferredSize(new Dimension(776, 550));
+		paintView.setBackground(Color.WHITE);
+		frame.add(paintView, BorderLayout.EAST);
+
+		frame.setVisible(true);
 	}
 
 	public void loadFile() {
@@ -291,12 +291,12 @@ public class MenuBar extends JMenuBar {
 				String fileName = file.getAbsolutePath();
 				fileManagement.deSerializeFromFile(fileName);
 				data = fileManagement.getData();
-//				start the process
-//				start(data.getMode());
-//				othello.setActivePlayerIndex(data.getActivePlayerIndex());
-//				othello.setBoardColors(data.getBoardColors());
-//				playerGUI.updatePoints();
-//				playerGUI.setPlayerTurnImage(othello.getActivePlayer().getColor());
+				// start the process
+				// start(data.getMode());
+				// othello.setActivePlayerIndex(data.getActivePlayerIndex());
+				// othello.setBoardColors(data.getBoardColors());
+				// playerGUI.updatePoints();
+				// playerGUI.setPlayerTurnImage(othello.getActivePlayer().getColor());
 
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
