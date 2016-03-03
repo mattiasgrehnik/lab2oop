@@ -11,23 +11,22 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import controller.ShapeController;
 import model.DataStorage;
 import model.FileManagement;
-import model.PaintModel;
 import model.ShapeFactory;
 
 public class MenuBar extends JMenuBar {
 	private Frame frame;
 	private ButtonGroup shapeGroup;
 	private String[] shapeNames;
-	private Color selectedColor;
+	private ShapeController sc;
 	private JComponent paintView;
-	private PaintModel model;
 
 	public MenuBar(Frame frame) {
 		this.frame = frame;
 		shapeGroup = new ButtonGroup();
-		selectedColor = Color.BLACK;
+		sc = ShapeController.getInstance();
 		initializeFileMenu();
 		initializeCommandMenu();
 		initializeShapeMenu();
@@ -84,7 +83,7 @@ public class MenuBar extends JMenuBar {
 		one.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Draw shape
+				sc.setStroke(1);
 			}
 		});
 		JRadioButtonMenuItem two = new JRadioButtonMenuItem("2px");
@@ -93,7 +92,7 @@ public class MenuBar extends JMenuBar {
 		two.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Draw shape
+				sc.setStroke(2);
 			}
 		});
 
@@ -103,7 +102,7 @@ public class MenuBar extends JMenuBar {
 		three.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Draw shape
+				sc.setStroke(3);
 			}
 		});
 
@@ -113,7 +112,7 @@ public class MenuBar extends JMenuBar {
 		four.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Draw shape
+				sc.setStroke(4);
 			}
 		});
 		menu.setHorizontalAlignment(SwingConstants.LEFT);
@@ -138,7 +137,7 @@ public class MenuBar extends JMenuBar {
 		red.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedColor = Color.RED;
+				sc.setColor(Color.RED);
 			}
 		});
 
@@ -148,7 +147,7 @@ public class MenuBar extends JMenuBar {
 		blue.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedColor = Color.BLUE;
+				sc.setColor(Color.BLUE);
 			}
 		});
 
@@ -158,7 +157,7 @@ public class MenuBar extends JMenuBar {
 		green.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedColor = Color.GREEN;
+				sc.setColor(Color.GREEN);
 			}
 		});
 
@@ -168,7 +167,7 @@ public class MenuBar extends JMenuBar {
 		yellow.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedColor = Color.YELLOW;
+				sc.setColor(Color.YELLOW);
 			}
 		});
 
@@ -179,7 +178,7 @@ public class MenuBar extends JMenuBar {
 		black.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectedColor = Color.BLACK;
+				sc.setColor(Color.BLACK);
 			}
 		});
 		menu.setHorizontalAlignment(SwingConstants.LEFT);
@@ -199,7 +198,7 @@ public class MenuBar extends JMenuBar {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					paintView.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-					
+					sc.setShape(shape.getText());
 				}
 			});
 		}
@@ -226,7 +225,6 @@ public class MenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveFile();
-
 			}
 		});
 
@@ -263,11 +261,11 @@ public class MenuBar extends JMenuBar {
 
 	public void start() {
 		frame.getContentPane().removeAll();
-		model = new PaintModel();
 
-		paintView = new PaintView(model);
+		paintView = new PaintView();
 		paintView.setPreferredSize(new Dimension(776, 550));
 		paintView.setBackground(Color.WHITE);
+		paintView.addMouseListener(sc);
 		frame.add(paintView, BorderLayout.EAST);
 
 		frame.setVisible(true);

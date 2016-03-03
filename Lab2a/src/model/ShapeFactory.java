@@ -24,15 +24,15 @@ public class ShapeFactory {
 		if (shape == null) {
 			return null;
 		}
-		if (shape.equals("line")) {
+		if (shape.equalsIgnoreCase("Line")) {
 			return new Line();
-		} else if (shape.equals("circle")) {
+		} else if (shape.equalsIgnoreCase("Circle")) {
 			return new Circle();
-		} else if (shape.equals("rectangle")) {
+		} else if (shape.equalsIgnoreCase("Rectangle")) {
 			return new Rectangle();
-		} else if (shape.equals("triangle")) {
+		} else if (shape.equalsIgnoreCase("Triangle")) {
 			return new Triangle();
-		} else if (shape.equals("square")) {
+		} else if (shape.equalsIgnoreCase("Square")) {
 			return new Square();
 		}
 

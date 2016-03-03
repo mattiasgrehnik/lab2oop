@@ -1,13 +1,15 @@
 package model.Shapes;
 
+import java.awt.Graphics2D;
+
 import model.Shape;
 
-public class Circle implements Shape {
+public class Circle extends Shape {
 
 	@Override
-	public String getMenuName() {
-		// TODO Auto-generated method stub
-		return null;
+	protected void drawShape(Graphics2D g) {
+		g.drawOval(300, 300, 300, 300);
+		
 	}
 
 }
