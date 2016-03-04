@@ -8,12 +8,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import view.PaintView;
 import model.PaintModel;
 import model.Shape;
 import model.ShapeFactory;
+import model.Shapes.Circle;
 
 public class ShapeController implements MouseListener {
 	private PaintModel model;
+	private PaintView view;
 	public Color color;
 	private ShapeFactory sf;
 	private Shape shape;
@@ -26,11 +29,12 @@ public class ShapeController implements MouseListener {
 		return sc;
 	}
 
-	private ShapeController() {
+	public ShapeController() {
 		model = new PaintModel();
 		sf = new ShapeFactory();
 		color = Color.BLACK;
 		stroke = new BasicStroke(1);
+		view = new PaintView();
 	}
 
 	public void clearSettings() {
@@ -53,18 +57,29 @@ public class ShapeController implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (shape != null) {
-			shape.setColor(color);
-			shape.setStroke(stroke);
-			shape.setX(e.getX());
-			shape.setY(e.getY());
-			model.addShape(shape);
-		}
+		int x = e.getX();
+		int y = e.getY();
+		Circle c = new Circle();
+		c.setX(x);
+		c.setY(y);
+		c.setFilled(true);
+		c.setColor(color);
+		System.out.println(c.getX() +  " " + c.getY());
+		view.addShape(c);
+		model.addShape(c);
+		view.repaint();
+		
+		//		if (shape != null) {
+//			shape.setColor(color);
+//			shape.setStroke(stroke);
+//			shape.setX(e.getX());
+//			shape.setY(e.getY());
+//			model.addShape(shape);
+//		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 

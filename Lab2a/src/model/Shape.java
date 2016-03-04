@@ -43,12 +43,10 @@ public abstract class Shape {
 		this.y = y;
 	}
 
-	final public void draw(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(color);
-		g2.setStroke(stroke);
-		drawShape(g2);
+	public void draw(Graphics g) {
+		g.setColor(color);
+		drawShape(g);
 	}
 
-	abstract protected void drawShape(Graphics2D g);
+	abstract protected void drawShape(Graphics g);
 }
