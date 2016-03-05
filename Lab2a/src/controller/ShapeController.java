@@ -92,12 +92,12 @@ public class ShapeController implements MouseListener {
 			} else {
 				shape.setWidth(e.getX() - tmpX);
 			}
-//			if (e.getY() < shape.getY()) {
-//				shape.setY(e.getY());
-//				shape.setWidth(tmpY - e.getY());
-//			} else {
+			if (e.getY() < shape.getY()) {
+				shape.setY(e.getY());
+				shape.setHeight(tmpY - e.getY());
+			} else {
 				shape.setHeight(e.getY() - tmpY);
-//			}
+			}
 			model.addShape(shape);
 		}
 
