@@ -43,6 +43,7 @@ public class MenuBar extends JMenuBar {
 		select.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sc.clearShape();
 				paintView.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 		});

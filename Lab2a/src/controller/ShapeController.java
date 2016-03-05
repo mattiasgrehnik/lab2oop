@@ -35,10 +35,8 @@ public class ShapeController implements MouseListener {
 		model.addObserver(o);
 	}
 
-	public void clearSettings() {
+	public void clearShape() {
 		shapeType = null;
-		color = Color.BLACK;
-		stroke = 1;
 	}
 
 	public void setColor(Color color) {
