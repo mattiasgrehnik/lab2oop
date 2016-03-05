@@ -5,14 +5,31 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 
-public abstract class Shape {
+public abstract class Shape{
 
 	private Color color;
-	Stroke stroke;
-	private int x,y;
+	private Stroke stroke;
+	private int x,y,width,height;
+	private boolean filled;
 
 	public Color getColor() {
 		return color;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	public void setColor(Color color) {
@@ -43,10 +60,21 @@ public abstract class Shape {
 		this.y = y;
 	}
 
-	public void draw(Graphics g) {
-		g.setColor(color);
-		drawShape(g);
-	}
 
-	abstract protected void drawShape(Graphics g);
+	
+	public void draw(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(color);
+		g2.setStroke(stroke);
+		drawShape(g2);
+	}
+	abstract protected void drawShape(Graphics2D g);
+
+	public void setFilled(boolean b) {
+		filled = b;
+	}
+	
+	public boolean isFilled() {
+		return filled;
+	}
 }

@@ -6,7 +6,6 @@ import javax.swing.*;
 public class Frame extends JFrame{
 	
 	public Frame() {
-		PaintView p = new PaintView();
 		try {
 			String lookAndFeel = UIManager.getSystemLookAndFeelClassName();
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -17,10 +16,9 @@ public class Frame extends JFrame{
 		
 		MenuBar menuBar = new MenuBar(this);
 		setJMenuBar(menuBar);
-		add(p);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("NotPaint");
-		setSize(776, 590);
+		setSize(1024, 768);
 		setResizable(false);
 		setVisible(true);
 	}

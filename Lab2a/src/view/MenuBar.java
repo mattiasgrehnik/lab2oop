@@ -1,9 +1,7 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +30,8 @@ public class MenuBar extends JMenuBar {
 		initializeShapeMenu();
 		initializeColorMenu();
 		initializeThicknessMenu();
-		start();
+		paintView = new PaintView();
+		frame.add(paintView);
 	}
 
 	private void initializeCommandMenu() {
@@ -128,6 +127,7 @@ public class MenuBar extends JMenuBar {
 		fill.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sc.toggleFilled();
 			}
 		});
 		menu.addSeparator();
@@ -210,15 +210,6 @@ public class MenuBar extends JMenuBar {
 		JMenu menu = new JMenu("File");
 		add(menu);
 
-		JMenuItem newPic = new JMenuItem("New Painting");
-		menu.add(newPic);
-		newPic.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				start();
-			}
-		});
-
 		JMenuItem saveGame = new JMenuItem("Save Painting");
 		menu.add(saveGame);
 		saveGame.addActionListener(new ActionListener() {
@@ -259,17 +250,6 @@ public class MenuBar extends JMenuBar {
 		return menu;
 	}
 
-	public void start() {
-		frame.getContentPane().removeAll();
-
-		paintView = new PaintView();
-		paintView.setPreferredSize(new Dimension(776, 550));
-		paintView.setBackground(Color.WHITE);
-		paintView.addMouseListener(sc);
-		frame.add(paintView, BorderLayout.EAST);
-
-		frame.setVisible(true);
-	}
 
 	public void loadFile() {
 		DataStorage data;

@@ -1,69 +1,43 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import controller.ShapeController;
 import model.Shape;
-import model.Shapes.Circle;
 
-public class PaintView extends JPanel implements MouseListener {
+public class PaintView extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Circle> shapeList;
+	private ArrayList<Shape> shapes = new ArrayList<Shape>();
+	private ShapeController sc;
 	
-	
-	public PaintView(){
-		shapeList = new ArrayList<Circle>();
-
+	public PaintView() {
+		setBackground(Color.WHITE);
+		setPreferredSize(new Dimension(1024, 768));
+		sc = ShapeController.getInstance();
+		sc.addObserver(this);
+		addMouseListener(sc);
 	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		shapes.add((Shape) arg);
+		repaint();
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		System.out.println("test");
-		for(Circle s : shapeList){
-			
-
-			System.out.println("---------------------------------------------");
-			g.setColor(s.getColor());
-			g.fillRect(s.getX(), s.getY(), 100, 100);
-			s.draw(g);
+		for (Shape shape : shapes) {
+			shape.draw(g);
 		}
 	}
-
-	public void addShape(Circle s){
-		shapeList.add(s);
-	}
 	
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
