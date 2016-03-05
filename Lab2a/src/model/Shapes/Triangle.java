@@ -8,16 +8,16 @@ public class Triangle extends Shape {
 
 	@Override
 	protected void drawShape(Graphics2D g) {
+
+		int x1 = super.getX1(), x2 = super.getX2(), y1 = super.getY1(), y2 = super
+				.getY2();
+
 		if (super.isFilled()) {
-			g.fillPolygon(
-					new int[] { super.getX(), (super.getWidth() + super.getX() * 2) / 2,
-							super.getWidth() + super.getX() },
-					new int[] { super.getY() + super.getHeight(), super.getY(), super.getY() + super.getHeight() }, 3);
+			g.fillPolygon(new int[] { x1, (x2 + x1) / 2, x2 }, new int[] { y2,
+					y1, y2 }, 3);
 		} else {
-			g.drawPolygon(
-					new int[] { super.getX(), (super.getWidth() + super.getX() * 2) / 2,
-							super.getWidth() + super.getX() },
-					new int[] { super.getY() + super.getHeight(), super.getY(), super.getY() + super.getHeight() }, 3);
+			g.drawPolygon(new int[] { x1, (x2 + x1) / 2, x2 }, new int[] { y2,
+					y1, y2 }, 3);
 		}
 
 	}

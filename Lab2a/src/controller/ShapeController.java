@@ -70,35 +70,25 @@ public class ShapeController implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println(e.getX() + " " + e.getY());
+		System.out.println("Pressed: " + e.getX() + " " + e.getY());
 		if (shapeType != null) {
 			shape = sf.getShape(shapeType);
 			shape.setColor(color);
 			shape.setStroke(stroke);
 			shape.setFilled(filled);
-			shape.setX(e.getX());
-			shape.setY(e.getY());
+			shape.setX1(e.getX());
+			shape.setY1(e.getY());
 
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		System.out.println("Released: " + e.getX() + " " + e.getY());
 		if (shape != null) {
-			int tmpX = shape.getX(), tmpY = shape.getY();
-			if (e.getX() < shape.getX()) {
-				shape.setX(e.getX());
-				shape.setWidth(tmpX - e.getX());
-			} else {
-				shape.setWidth(e.getX() - tmpX);
-			}
-			if (e.getY() < shape.getY()) {
-				shape.setY(e.getY());
-				shape.setHeight(tmpY - e.getY());
-			} else {
-				shape.setHeight(e.getY() - tmpY);
-			}
-			model.addShape(shape);
+		shape.setX2(e.getX());
+		shape.setY2(e.getY());	
+		model.addShape(shape);
 		}
 
 	}
