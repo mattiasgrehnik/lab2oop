@@ -3,7 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,20 +15,24 @@ import model.Shape;
 public class PaintView extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Shape> shapes = new ArrayList<Shape>();
+	private HashSet<Shape> shapes;
 	private ShapeController sc;
-	
+
 	public PaintView() {
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(1024, 768));
+		shapes = new HashSet<>();
 		sc = ShapeController.getInstance();
 		sc.addObserver(this);
 		addMouseListener(sc);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void update(Observable o, Object arg) {
-		shapes.add((Shape) arg);
+		if ((o.toString() == "PaintModel") && arg != null) {
+			shapes = (HashSet<Shape>) arg;
+		}
 		repaint();
 	}
 
@@ -39,5 +43,5 @@ public class PaintView extends JPanel implements Observer {
 			shape.draw(g);
 		}
 	}
-	
+
 }

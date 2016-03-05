@@ -1,24 +1,19 @@
 package controller;
-
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observer;
 
-import view.PaintView;
 import model.PaintModel;
 import model.Shape;
 import model.ShapeFactory;
 
 public class ShapeController implements MouseListener {
 	private PaintModel model;
-	public Color color;
+	private Color color;
 	private ShapeFactory sf;
 	private String shapeType;
-	private Stroke stroke;
+	private int stroke;
 	private boolean filled;
 	private Shape shape;
 	private static ShapeController sc;
@@ -33,7 +28,7 @@ public class ShapeController implements MouseListener {
 		model = new PaintModel();
 		sf = new ShapeFactory();
 		color = Color.BLACK;
-		stroke = new BasicStroke(1);
+		stroke = 1;
 	}
 
 	public void addObserver(Observer o) {
@@ -43,7 +38,7 @@ public class ShapeController implements MouseListener {
 	public void clearSettings() {
 		shapeType = null;
 		color = Color.BLACK;
-		stroke = new BasicStroke(1);
+		stroke = 1;
 	}
 
 	public void setColor(Color color) {
@@ -51,7 +46,7 @@ public class ShapeController implements MouseListener {
 	}
 
 	public void setStroke(int width) {
-		this.stroke = new BasicStroke(width * 2);
+		this.stroke = width * 2; // width * 2 = stroke in px
 	}
 
 	public void setShape(String name) {
@@ -62,7 +57,6 @@ public class ShapeController implements MouseListener {
 		filled = !filled;
 	}
 
-	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
@@ -70,7 +64,6 @@ public class ShapeController implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("Pressed: " + e.getX() + " " + e.getY());
 		if (shapeType != null) {
 			shape = sf.getShape(shapeType);
 			shape.setColor(color);
@@ -78,19 +71,16 @@ public class ShapeController implements MouseListener {
 			shape.setFilled(filled);
 			shape.setX1(e.getX());
 			shape.setY1(e.getY());
-
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("Released: " + e.getX() + " " + e.getY());
 		if (shape != null) {
-		shape.setX2(e.getX());
-		shape.setY2(e.getY());	
-		model.addShape(shape);
+			shape.setX2(e.getX());
+			shape.setY2(e.getY());
+			model.addShape(shape);
 		}
-
 	}
 
 	@Override
@@ -99,6 +89,19 @@ public class ShapeController implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	public void setPainting(Object fileData) {
+		this.model = (PaintModel) fileData;
+	}
+
+	public PaintModel getPainting() {
+		return model;
+	}
+
+	public void notifyObservers() {
+		model.notifyObservers();
+		
 	}
 
 }

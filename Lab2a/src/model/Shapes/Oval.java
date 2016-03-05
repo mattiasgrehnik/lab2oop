@@ -6,10 +6,15 @@ import model.Shape;
 
 public class Oval extends Shape {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -219601397697646791L;
+
 	@Override
 	protected void drawShape(Graphics2D g) {
-		int x1 = super.getX1(), x2 = super.getX2(), y1 = super.getY1(), y2 = super
-				.getY2();
+		int x1 = super.getX1(), x2 = super.getX2(), y1 = super.getY1(), y2 = super.getY2();
 
 		int tmpX = x1, tmpY = y1;
 

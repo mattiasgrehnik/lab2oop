@@ -10,7 +10,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.ShapeController;
-import model.DataStorage;
 import model.FileManagement;
 import model.ShapeFactory;
 
@@ -250,32 +249,24 @@ public class MenuBar extends JMenuBar {
 		return menu;
 	}
 
-
 	public void loadFile() {
-		DataStorage data;
-
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileFilter(new FileNameExtensionFilter("Othello (.oth)", "oth"));
-
-		int r = fileChooser.showOpenDialog(frame);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("NotPaint (.ntp)", "ntp"));
+		int r = fileChooser.showSaveDialog(frame);
 
 		if (r == JFileChooser.APPROVE_OPTION) {
-
 			File file = fileChooser.getSelectedFile();
-
-			System.out.println(file.getAbsolutePath());
-			FileManagement fileManagement = new FileManagement();
 			try {
 				String fileName = file.getAbsolutePath();
-				fileManagement.deSerializeFromFile(fileName);
-				data = fileManagement.getData();
-				// start the process
-				// start(data.getMode());
-				// othello.setActivePlayerIndex(data.getActivePlayerIndex());
-				// othello.setBoardColors(data.getBoardColors());
-				// playerGUI.updatePoints();
-				// playerGUI.setPlayerTurnImage(othello.getActivePlayer().getColor());
-
+				Object fileData = FileManagement.deSerializeFromFile(fileName);
+				frame.getContentPane().removeAll();
+				sc.setPainting(fileData);
+				paintView = new PaintView();
+				frame.add(paintView);
+				sc.notifyObservers();
+				frame.setVisible(true);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -287,26 +278,21 @@ public class MenuBar extends JMenuBar {
 	}
 
 	public void saveFile() {
-
-		DataStorage data = new DataStorage();
-
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setFileFilter(new FileNameExtensionFilter("NotPaint (.ntp)", "ntp"));
-
 		int r = fileChooser.showSaveDialog(frame);
 		if (r == JFileChooser.APPROVE_OPTION) {
-
 			File file = fileChooser.getSelectedFile();
-
-			FileManagement fileManagement = new FileManagement();
-			fileManagement.setData(data);
-
 			try {
-				String fileName = file.getAbsolutePath() + ".ntp";
-				fileManagement.serializeToFile(fileName);
-				System.out.println("SUCCESS!");
+				String fileName = file.getAbsolutePath();
+				if (fileName.contains(".ntp")) {
+					fileName = file.getAbsolutePath();
+				} else {
+					fileName = file.getAbsolutePath() + ".ntp";
+				}
+				FileManagement.serializeToFile(fileName, sc.getPainting());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

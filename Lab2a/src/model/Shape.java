@@ -1,14 +1,18 @@
 package model;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
+import java.io.Serializable;
 
-public abstract class Shape{
-
+public abstract class Shape implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1129963998868953765L;
 	private Color color;
-	private Stroke stroke;
+	private int strokeWidth;
 	private int x1,x2,y1,y2;
 	private boolean filled;
 
@@ -20,12 +24,12 @@ public abstract class Shape{
 		this.color = color;
 	}
 
-	public Stroke getStroke() {
-		return stroke;
+	public int getStroke() {
+		return strokeWidth;
 	}
 
-	public void setStroke(Stroke stroke) {
-		this.stroke = stroke;
+	public void setStroke(int stroke) {
+		this.strokeWidth = stroke;
 	}
 	
 	public int getX1() {
@@ -60,14 +64,6 @@ public abstract class Shape{
 		this.y2 = y2;
 	}
 
-	public void draw(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(color);
-		g2.setStroke(stroke);
-		drawShape(g2);
-	}
-	abstract protected void drawShape(Graphics2D g);
-
 	public void setFilled(boolean b) {
 		filled = b;
 	}
@@ -75,4 +71,15 @@ public abstract class Shape{
 	public boolean isFilled() {
 		return filled;
 	}
+	
+	public void draw(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(color);
+		g2.setStroke(new BasicStroke(strokeWidth));
+		drawShape(g2);
+		System.out.println();
+	}
+	abstract protected void drawShape(Graphics2D g);
+
+
 }
