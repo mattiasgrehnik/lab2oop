@@ -2,10 +2,10 @@ package model;
 
 import java.util.ArrayList;
 
-import model.Shapes.Oval;
-import model.Shapes.Line;
-import model.Shapes.Rectangle;
-import model.Shapes.Triangle;
+import model.shapes.Line;
+import model.shapes.Oval;
+import model.shapes.Rectangle;
+import model.shapes.Triangle;
 
 public class ShapeFactory {
 

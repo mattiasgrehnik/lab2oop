@@ -3,12 +3,18 @@ package controller;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.LinkedList;
 import java.util.Observer;
-import java.util.Set;
 
 import model.PaintModel;
+import model.RegretInvoker;
 import model.Shape;
 import model.ShapeFactory;
+import model.undocommands.UndoAdd;
+import model.undocommands.UndoColor;
+import model.undocommands.UndoFilled;
+import model.undocommands.UndoRemove;
+import model.undocommands.UndoStroke;
 
 public class ShapeController implements MouseListener {
 	private PaintModel model;
@@ -19,6 +25,7 @@ public class ShapeController implements MouseListener {
 	private boolean filled;
 	private Shape shape, selectedShape;
 	private boolean selectMode;
+	private RegretInvoker regretPile;
 	private static ShapeController sc;
 
 	public static ShapeController getInstance() {
@@ -28,6 +35,7 @@ public class ShapeController implements MouseListener {
 	}
 
 	private ShapeController() {
+		regretPile = RegretInvoker.getInstance();
 		model = new PaintModel();
 		sf = new ShapeFactory();
 		color = Color.BLACK;
@@ -44,7 +52,8 @@ public class ShapeController implements MouseListener {
 
 	public void setColor(Color color) {
 		if (selectMode && selectedShape != null) {
-			selectedShape.setColor(color); // width * 2 = stroke in px
+			regretPile.addToUndo(new UndoColor(selectedShape, selectedShape.getColor(), model.getShapes()));
+			selectedShape.setColor(color);
 			notifyModelObservers();
 		} else
 			this.color = color;
@@ -52,30 +61,32 @@ public class ShapeController implements MouseListener {
 
 	public void setStroke(int width) {
 		if (selectMode && selectedShape != null) {
+			regretPile.addToUndo(new UndoStroke(selectedShape, selectedShape.getStroke(), model.getShapes()));
 			selectedShape.setStroke(width * 2); // width * 2 = stroke in px
 			notifyModelObservers();
 		} else
 			this.stroke = width * 2;
+
 	}
 
 	public void setShape(String name) {
 		shapeType = name;
 	}
 
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
 	}
 
-	public void setFilled(boolean b){
+	public void setFilled(boolean b) {
 		if (selectMode && selectedShape != null) {
+			regretPile.addToUndo(new UndoFilled(selectedShape, selectedShape.isFilled(), model.getShapes()));
 			selectedShape.setFilled(b);
 			notifyModelObservers();
 		} else
 			filled = b;
 	}
-	
+
 	public boolean isFilled() {
 		return filled;
 	}
@@ -84,11 +95,6 @@ public class ShapeController implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 		if (selectMode) {
 			selectedShape = model.selectShape(e.getX(), e.getY());
-			if (selectedShape != null) {
-				color = selectedShape.getColor();
-				stroke = selectedShape.getStroke();
-				filled = selectedShape.isFilled();
-			}
 		} else {
 			if (shapeType != null) {
 				shape = sf.getShape(shapeType);
@@ -107,6 +113,7 @@ public class ShapeController implements MouseListener {
 			shape.setX2(e.getX());
 			shape.setY2(e.getY());
 			model.addShape(shape);
+			regretPile.addToUndo(new UndoAdd(shape, model.getShapes()));
 			shape = null;
 		}
 	}
@@ -128,7 +135,7 @@ public class ShapeController implements MouseListener {
 	}
 
 	public void notifyModelObservers() {
-		model.notifyObservers();
+		model.myNotifyObservers();
 	}
 
 	public void setSelect(boolean b) {
@@ -136,19 +143,28 @@ public class ShapeController implements MouseListener {
 		selectMode = b;
 	}
 
-
-
 	public void removeSelected() {
 		if (selectMode && selectedShape != null) {
 			model.remove(selectedShape);
+			regretPile.addToUndo(new UndoRemove(selectedShape, model.getShapes()));
 			selectedShape = null;
 			notifyModelObservers();
-		} 
-		
+		}
+
 	}
 
-	public Set<Shape> getModelShapes() {
+	public LinkedList<Shape> getModelShapes() {
 		return model.getShapes();
+	}
+
+	public void undo() {
+		regretPile.undoLatest();
+		model.myNotifyObservers();
+	}
+
+	public void redo() {
+		regretPile.redoLatest();
+		model.myNotifyObservers();
 	}
 
 }

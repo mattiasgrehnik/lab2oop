@@ -1,14 +1,18 @@
 package model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
 import java.util.Observable;
+
 
 public class PaintModel extends Observable implements Serializable {
 	private static final long serialVersionUID = -6068929995458965085L;
-	private Set<Shape> shapes = new HashSet<Shape>();
+	private LinkedList<Shape> shapes;
 
+	public PaintModel(){
+		shapes = new LinkedList<Shape>();
+	}
+	
 	public void addShape(Shape shape) {
 		if (shape != null) {
 			shapes.add(shape);
@@ -26,20 +30,17 @@ public class PaintModel extends Observable implements Serializable {
 		return null;
 	}
 
-	@Override
-	public void notifyObservers() {
-		setChanged();
-		notifyObservers();
-	};
-
-
 	public void remove(Shape selectedShape) {
 		shapes.remove(selectedShape);
-		
 	}
 
-	public Set<Shape> getShapes() {
+	public LinkedList<Shape> getShapes() {
 		return shapes;
+	}
+
+	public void myNotifyObservers() {
+		setChanged();
+		notifyObservers();
 	}
 
 

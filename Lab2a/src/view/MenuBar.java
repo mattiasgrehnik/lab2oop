@@ -61,6 +61,7 @@ public class MenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				sc.removeSelected();
+				
 			}
 		});
 		menu.setHorizontalAlignment(SwingConstants.LEFT);
@@ -72,7 +73,7 @@ public class MenuBar extends JMenuBar {
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("UNDO");
+				sc.undo();
 			}
 		});
 		JMenuItem redo = new JMenuItem("Redo");
@@ -81,7 +82,7 @@ public class MenuBar extends JMenuBar {
 		redo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("REDO");
+				sc.redo();
 			}
 		});
 		menu.setHorizontalAlignment(SwingConstants.LEFT);

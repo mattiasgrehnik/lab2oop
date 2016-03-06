@@ -3,10 +3,9 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
-
 import javax.swing.JPanel;
 
 import controller.ShapeController;
@@ -15,7 +14,7 @@ import model.Shape;
 public class PaintView extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	private Set<Shape> shapes;
+	private LinkedList<Shape> shapes;
 	private ShapeController sc;
 
 	public PaintView() {
