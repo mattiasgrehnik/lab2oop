@@ -13,7 +13,7 @@ public class PaintModel extends Observable implements Serializable {
 		if (shape != null) {
 			shapes.add(shape);
 			setChanged();
-			notifyObservers(shapes);
+			notifyObservers();
 		}
 	}
 
@@ -29,17 +29,17 @@ public class PaintModel extends Observable implements Serializable {
 	@Override
 	public void notifyObservers() {
 		setChanged();
-		notifyObservers(shapes);
+		notifyObservers();
 	};
 
-	@Override
-	public String toString() {
-		return "PaintModel";
-	}
 
 	public void remove(Shape selectedShape) {
 		shapes.remove(selectedShape);
 		
+	}
+
+	public Set<Shape> getShapes() {
+		return shapes;
 	}
 
 

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observer;
+import java.util.Set;
 
 import model.PaintModel;
 import model.Shape;
@@ -144,6 +145,10 @@ public class ShapeController implements MouseListener {
 			notifyModelObservers();
 		} 
 		
+	}
+
+	public Set<Shape> getModelShapes() {
+		return model.getShapes();
 	}
 
 }
