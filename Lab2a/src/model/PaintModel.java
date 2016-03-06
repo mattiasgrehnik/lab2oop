@@ -16,6 +16,16 @@ public class PaintModel extends Observable implements Serializable {
 			notifyObservers(shapes);
 		}
 	}
+
+	public Shape selectShape(int x, int y) {
+		for (Shape shape : shapes) {
+			if (shape.contains(x, y)) {
+				return shape;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void notifyObservers() {
 		setChanged();
@@ -26,4 +36,11 @@ public class PaintModel extends Observable implements Serializable {
 	public String toString() {
 		return "PaintModel";
 	}
+
+	public void remove(Shape selectedShape) {
+		shapes.remove(selectedShape);
+		
+	}
+
+
 }

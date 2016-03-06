@@ -23,7 +23,7 @@ public class PaintView extends JPanel implements Observer {
 		setPreferredSize(new Dimension(1024, 768));
 		shapes = new HashSet<>();
 		sc = ShapeController.getInstance();
-		sc.addObserver(this);
+		sc.addModelObserver(this);
 		addMouseListener(sc);
 	}
 

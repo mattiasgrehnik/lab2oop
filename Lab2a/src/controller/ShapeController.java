@@ -1,4 +1,5 @@
 package controller;
+
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,7 +16,8 @@ public class ShapeController implements MouseListener {
 	private String shapeType;
 	private int stroke;
 	private boolean filled;
-	private Shape shape;
+	private Shape shape, selectedShape;
+	private boolean selectMode;
 	private static ShapeController sc;
 
 	public static ShapeController getInstance() {
@@ -31,7 +33,7 @@ public class ShapeController implements MouseListener {
 		stroke = 1;
 	}
 
-	public void addObserver(Observer o) {
+	public void addModelObserver(Observer o) {
 		model.addObserver(o);
 	}
 
@@ -40,44 +42,71 @@ public class ShapeController implements MouseListener {
 	}
 
 	public void setColor(Color color) {
-		this.color = color;
+		if (selectMode && selectedShape != null) {
+			selectedShape.setColor(color); // width * 2 = stroke in px
+			notifyModelObservers();
+		} else
+			this.color = color;
 	}
 
 	public void setStroke(int width) {
-		this.stroke = width * 2; // width * 2 = stroke in px
+		if (selectMode && selectedShape != null) {
+			selectedShape.setStroke(width * 2); // width * 2 = stroke in px
+			notifyModelObservers();
+		} else
+			this.stroke = width * 2;
 	}
 
 	public void setShape(String name) {
 		shapeType = name;
 	}
 
-	public void toggleFilled() {
-		filled = !filled;
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
 	}
 
+	public void setFilled(boolean b){
+		if (selectMode && selectedShape != null) {
+			selectedShape.setFilled(b);
+			notifyModelObservers();
+		} else
+			filled = b;
+	}
+	
+	public boolean isFilled() {
+		return filled;
+	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (shapeType != null) {
-			shape = sf.getShape(shapeType);
-			shape.setColor(color);
-			shape.setStroke(stroke);
-			shape.setFilled(filled);
-			shape.setX1(e.getX());
-			shape.setY1(e.getY());
+		if (selectMode) {
+			selectedShape = model.selectShape(e.getX(), e.getY());
+			if (selectedShape != null) {
+				color = selectedShape.getColor();
+				stroke = selectedShape.getStroke();
+				filled = selectedShape.isFilled();
+			}
+		} else {
+			if (shapeType != null) {
+				shape = sf.getShape(shapeType);
+				shape.setColor(color);
+				shape.setStroke(stroke);
+				shape.setFilled(filled);
+				shape.setX1(e.getX());
+				shape.setY1(e.getY());
+			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (shape != null) {
+		if (!selectMode && shape != null) {
 			shape.setX2(e.getX());
 			shape.setY2(e.getY());
 			model.addShape(shape);
+			shape = null;
 		}
 	}
 
@@ -97,8 +126,23 @@ public class ShapeController implements MouseListener {
 		return model;
 	}
 
-	public void notifyObservers() {
+	public void notifyModelObservers() {
 		model.notifyObservers();
+	}
+
+	public void setSelect(boolean b) {
+		selectedShape = null;
+		selectMode = b;
+	}
+
+
+
+	public void removeSelected() {
+		if (selectMode && selectedShape != null) {
+			model.remove(selectedShape);
+			selectedShape = null;
+			notifyModelObservers();
+		} 
 		
 	}
 

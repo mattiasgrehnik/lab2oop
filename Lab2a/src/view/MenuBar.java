@@ -5,7 +5,6 @@ import java.awt.Cursor;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -15,15 +14,18 @@ import model.ShapeFactory;
 
 public class MenuBar extends JMenuBar {
 	private Frame frame;
-	private ButtonGroup shapeGroup;
+	private ButtonGroup shapeGroup, colorGroup, strokeGroup, filledGroup;
 	private String[] shapeNames;
 	private ShapeController sc;
 	private JComponent paintView;
 
 	public MenuBar(Frame frame) {
 		this.frame = frame;
-		shapeGroup = new ButtonGroup();
 		sc = ShapeController.getInstance();
+		shapeGroup = new ButtonGroup();
+		colorGroup = new ButtonGroup();
+		strokeGroup = new ButtonGroup();
+		filledGroup = new ButtonGroup();
 		initializeFileMenu();
 		initializeCommandMenu();
 		initializeShapeMenu();
@@ -43,10 +45,26 @@ public class MenuBar extends JMenuBar {
 		select.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				colorGroup.clearSelection();
+				strokeGroup.clearSelection();
+				filledGroup.clearSelection();
 				sc.clearShape();
 				paintView.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				sc.setSelect(true);
 			}
 		});
+		
+		JMenuItem delete = new JMenuItem("Delete");
+		menu.add(delete);
+		delete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0));
+		delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sc.removeSelected();
+			}
+		});
+		menu.setHorizontalAlignment(SwingConstants.LEFT);
+		
 		menu.addSeparator();
 		JMenuItem undo = new JMenuItem("Undo");
 		undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
@@ -70,14 +88,13 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private void initializeThicknessMenu() {
-		JMenu menu = new JMenu("Thickness");
+		JMenu menu = new JMenu("Stroke");
 		add(menu);
-		ButtonGroup group = new ButtonGroup();
 
 		JRadioButtonMenuItem one = new JRadioButtonMenuItem("1px");
 		one.setSelected(true);
 		menu.add(one);
-		group.add(one);
+		strokeGroup.add(one);
 
 		one.addActionListener(new ActionListener() {
 			@Override
@@ -87,7 +104,7 @@ public class MenuBar extends JMenuBar {
 		});
 		JRadioButtonMenuItem two = new JRadioButtonMenuItem("2px");
 		menu.add(two);
-		group.add(two);
+		strokeGroup.add(two);
 		two.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -97,7 +114,7 @@ public class MenuBar extends JMenuBar {
 
 		JRadioButtonMenuItem three = new JRadioButtonMenuItem("3px");
 		menu.add(three);
-		group.add(three);
+		strokeGroup.add(three);
 		three.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -107,7 +124,7 @@ public class MenuBar extends JMenuBar {
 
 		JRadioButtonMenuItem four = new JRadioButtonMenuItem("4px");
 		menu.add(four);
-		group.add(four);
+		strokeGroup.add(four);
 		four.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -120,20 +137,33 @@ public class MenuBar extends JMenuBar {
 	private void initializeColorMenu() {
 		JMenu menu = new JMenu("Color");
 		add(menu);
-		ButtonGroup group = new ButtonGroup();
 
-		JRadioButtonMenuItem fill = new JRadioButtonMenuItem("Fill");
+		JRadioButtonMenuItem fill = new JRadioButtonMenuItem("Filled");
+
 		menu.add(fill);
+		filledGroup.add(fill);
 		fill.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sc.toggleFilled();
+				sc.setFilled(true);
 			}
 		});
+
+		JRadioButtonMenuItem unfill = new JRadioButtonMenuItem("Unfilled");
+		unfill.setSelected(true);
+		menu.add(unfill);
+		filledGroup.add(unfill);
+		unfill.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sc.setFilled(false);
+			}
+		});
+
 		menu.addSeparator();
 		JRadioButtonMenuItem red = new JRadioButtonMenuItem("Red");
 		menu.add(red);
-		group.add(red);
+		colorGroup.add(red);
 		red.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -143,7 +173,7 @@ public class MenuBar extends JMenuBar {
 
 		JRadioButtonMenuItem blue = new JRadioButtonMenuItem("Blue");
 		menu.add(blue);
-		group.add(blue);
+		colorGroup.add(blue);
 		blue.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -153,7 +183,7 @@ public class MenuBar extends JMenuBar {
 
 		JRadioButtonMenuItem green = new JRadioButtonMenuItem("Green");
 		menu.add(green);
-		group.add(green);
+		colorGroup.add(green);
 		green.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -163,7 +193,7 @@ public class MenuBar extends JMenuBar {
 
 		JRadioButtonMenuItem yellow = new JRadioButtonMenuItem("Yellow");
 		menu.add(yellow);
-		group.add(yellow);
+		colorGroup.add(yellow);
 		yellow.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -174,7 +204,7 @@ public class MenuBar extends JMenuBar {
 		JRadioButtonMenuItem black = new JRadioButtonMenuItem("Black");
 		black.setSelected(true);
 		menu.add(black);
-		group.add(black);
+		colorGroup.add(black);
 		black.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -197,6 +227,7 @@ public class MenuBar extends JMenuBar {
 			shape.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					sc.setSelect(false);
 					paintView.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 					sc.setShape(shape.getText());
 				}
@@ -266,7 +297,7 @@ public class MenuBar extends JMenuBar {
 				sc.setPainting(fileData);
 				paintView = new PaintView();
 				frame.add(paintView);
-				sc.notifyObservers();
+				sc.notifyModelObservers();
 				frame.setVisible(true);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -302,4 +333,5 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private static final long serialVersionUID = 1L;
+
 }
